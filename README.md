@@ -1,4 +1,4 @@
-# pythonProjects
+# Macro Counter & Calorie intake Calculator (Python)
 
 Simple Macro counter that both tracks your calories when you input its protein, carbs and fat and gives you a rough estimate on how many calories you should be eating per day either wanting to lose weight or keep the same weight 
 
