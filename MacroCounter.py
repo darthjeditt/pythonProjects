@@ -133,13 +133,16 @@ class MacroCounterApp(tk.Tk):
         self.labelCaloriesTotal.config(text=f"Total Calories: {totalCalories} kcal")
 
     def calculateCalories(self, entries, gender, isWeightLoss):
-        age, height, weight = [entry.get() for entry in entries]
+        try:
+            age, height, weight = [entry.get() for entry in entries]
 
-        if gender and age and height and weight:
-            bmr = 10 * float(weight) + 6.25 * float(height) - 5 * int(age) + (5 if gender == "male" else -161)
-            activityLevel = 1.2 if not isWeightLoss else 1.0  # Sedentary activity level for weight loss
-            recommendedCalories = round(bmr * activityLevel)
-            self.labelResult.config(text=f"Recommended Calories: {recommendedCalories} kcal")
+            if gender and age and height and weight:
+                bmr = 10 * float(weight) + 6.25 * float(height) - 5 * int(age) + (5 if gender == "male" else -161)
+                activityLevel = 1.2 if not isWeightLoss else 1.0  # Sedentary activity level for weight loss
+                recommendedCalories = round(bmr * activityLevel)
+                self.labelResult.config(text=f"Recommended Calories: {recommendedCalories} kcal")
+        except ValueError:
+            self.labelResult.config(text="Please enter valid values.")
 
 
 if __name__ == "__main__":
