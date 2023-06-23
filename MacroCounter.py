@@ -3,6 +3,8 @@ from tkinter import ttk
 
 
 class MacroCounterApp(tk.Tk):
+
+    # Initialize some stuff like the window UI and creating the widgets via calling the "createWidgets()" function
     def __init__(self):
         super().__init__()
         self.title("Macro Counter")
@@ -11,9 +13,11 @@ class MacroCounterApp(tk.Tk):
 
         self.meals = []
 
-        self.create_widgets()
+        self.createMacroCounter()
 
-    def create_widgets(self):
+    def createMacroCounter(self):
+
+        # Creates the Macro counter UI with set labels.
         self.tabControl = ttk.Notebook(self)
 
         self.tabMeals = ttk.Frame(self.tabControl)
@@ -35,35 +39,30 @@ class MacroCounterApp(tk.Tk):
             entry.grid(row=i, column=1, padx=5, pady=5)
             self.entries.append(entry)
 
+        # UI settings
         self.buttonAdd = tk.Button(self.tabMeals, text="Add Meal", command=self.addMeal)
-        self.buttonAdd.pack(pady=10)
-
         self.frameMeals = tk.Frame(self.tabMeals)
-        self.frameMeals.pack()
-
         self.labelMealsTitle = tk.Label(self.frameMeals, text="Your Meals", font=("Arial", 12, "bold"))
-        self.labelMealsTitle.pack(pady=5)
-
         self.listboxMeals = tk.Listbox(self.frameMeals, width=40, height=8)
-        self.listboxMeals.pack(padx=10, pady=5)
-
         self.frameTotals = tk.Frame(self.tabMeals)
-        self.frameTotals.pack(pady=10)
-
         self.labelTotalsTitle = tk.Label(self.frameTotals, text="Total", font=("Arial", 12, "bold"))
-        self.labelTotalsTitle.pack(pady=5)
-
-        self.labelProteinTotal = tk.Label(self.frameTotals, text="Total Protein: 0 g")
-        self.labelProteinTotal.pack()
-
-        self.labelCarbsTotal = tk.Label(self.frameTotals, text="Total Carbohydrates: 0 g")
-        self.labelCarbsTotal.pack()
-
+        self.labelProteinTotal = tk.Label(self.frameTotals, text="Total Protein: 0 g")    
+        self.labelCarbsTotal = tk.Label(self.frameTotals, text="Total Carbohydrates: 0 g")      
         self.labelFatTotal = tk.Label(self.frameTotals, text="Total Fat: 0 g")
-        self.labelFatTotal.pack()
-
         self.labelCaloriesTotal = tk.Label(self.frameTotals, text="Total Calories: 0 kcal")
+
+        # Packing
+        self.buttonAdd.pack(pady=10)
+        self.frameMeals.pack()
+        self.labelMealsTitle.pack(pady=5)
+        self.listboxMeals.pack(padx=10, pady=5)
+        self.frameTotals.pack(pady=10)
+        self.labelTotalsTitle.pack(pady=5)
+        self.labelProteinTotal.pack()
+        self.labelCarbsTotal.pack()
+        self.labelFatTotal.pack()
         self.labelCaloriesTotal.pack()
+        
 
         self.tabControl.add(self.createCalorieTab(), text="Calorie Calculator")
 
@@ -75,15 +74,13 @@ class MacroCounterApp(tk.Tk):
 
         frameCalorieInput = tk.Frame(tabCalorie)
         frameCalorieInput.pack(pady=10)
-
+     
+        # Gender UI setting
         tk.Label(frameCalorieInput, text="Gender:").grid(row=0, column=0, padx=5, pady=5)
-
         genderVar = tk.StringVar()
         genderVar.set("male")
-
         maleRadio = tk.Radiobutton(frameCalorieInput, text="Male", variable=genderVar, value="male")
         maleRadio.grid(row=0, column=1, padx=5, pady=5)
-
         femaleRadio = tk.Radiobutton(frameCalorieInput, text="Female", variable=genderVar, value="female")
         femaleRadio.grid(row=0, column=2, padx=5, pady=5)
 
@@ -96,19 +93,22 @@ class MacroCounterApp(tk.Tk):
             entry.grid(row=i + 1, column=1, padx=5, pady=5)
             entries.append(entry)
 
+        # Actions
         lossCheckboxVar = tk.IntVar()
-        lossCheckbox = tk.Checkbutton(tabCalorie, text="Weight Loss", variable=lossCheckboxVar)
-        lossCheckbox.pack(pady=10)
-
+        lossCheckbox = tk.Checkbutton(tabCalorie, text="Weight Loss", variable=lossCheckboxVar)  
         buttonCalculate = tk.Button(tabCalorie, text="Calculate", command=lambda: self.calculateCalories(entries, genderVar.get(), lossCheckboxVar.get()))
-        buttonCalculate.pack(pady=10)
-
         self.labelResult = tk.Label(tabCalorie, text="", font=("Arial", 12))
+
+        # Packing
+        lossCheckbox.pack(pady=10)
+        buttonCalculate.pack(pady=10)
         self.labelResult.pack()
 
         return tabCalorie
 
     def addMeal(self):
+        '''Adds a meal to the list and re-calculates the total.'''
+
         mealEntries = [entry.get() for entry in self.entries]
 
         if all(mealEntries):
@@ -121,6 +121,8 @@ class MacroCounterApp(tk.Tk):
             self.calculateTotals()
 
     def calculateTotals(self):
+        '''Calculation of the total Protein, Carbs, Fats and Calories'''
+
         totalProtein = sum(float(meal["protein"]) for meal in self.meals)
         totalCarbs = sum(float(meal["carbs"]) for meal in self.meals)
         totalFat = sum(float(meal["fat"]) for meal in self.meals)
@@ -133,6 +135,8 @@ class MacroCounterApp(tk.Tk):
         self.labelCaloriesTotal.config(text=f"Total Calories: {totalCalories} kcal")
 
     def calculateCalories(self, entries, gender, isWeightLoss):
+        '''Calculation for calorie intake'''
+
         try:
             age, height, weight = [entry.get() for entry in entries]
 
